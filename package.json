@@ -1,12 +1,12 @@
 {
   "name": "js-xlsx-style",
-  "version": "1.1.0",
+  "version": "1.15.1",
   "private": true,
   "scripts": {
     "build": ""
   },
   "devDependencies": {
-    "xlsx": "^0.14.3",
+    "xlsx": "^0.15.1",
     "xlsx-style": "^0.8.13"
   }
 }
