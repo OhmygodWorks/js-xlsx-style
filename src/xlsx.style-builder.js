@@ -31,20 +31,27 @@ let XmlNode = (function () {
     };
     ///
     XmlNode.prototype.attr = function (attr, value) {
-        if (value === undefined) {
-            delete this._attributes[attr];
-            return this;
-        }
         if (arguments.length === 0) {
+			/// 无参调用,返回当前所有属性
             return this._attributes;
-        } else if (typeof attr == 'string' && arguments.length === 1) {
-            return this._attributes.attr[attr];
-        }
-        if (typeof attr == 'object' && arguments.length === 1) for (let key in attr) {
-            if (!attr.hasOwnProperty(key)) continue;
-            this._attributes[key] = attr[key];
+        } else if (arguments.length === 1) {
+			if (typeof attr == 'string') {
+				/// 单参数来key的时候,返回指定key所对应的属性
+			    return this._attributes.attr[attr];
+			} else if (typeof attr == 'object') for(let key in attr) {
+				/// 单参数来obj的时候,把obj里面指定的属性添加进来
+				if (!attr.hasOwnProperty(key)) continue;
+				/// 这里其实应该用Objects.assign来做的更安全点的
+				this._attributes[key] = attr[key];
+			}
         } else if (arguments.length === 2 && typeof attr == 'string') {
-            this._attributes[attr] = value;
+			if (value === undefined || value === null) {
+				/// 双参数指定key来null的时候删除key所对应的属性
+			    delete this._attributes[attr];
+			} else {
+				/// 双参数指定key和值的时候设置key所对应的属性
+				this._attributes[attr] = value;
+			}
         }
         return this;
     };
@@ -165,7 +172,7 @@ var StyleBuilder = function (options) {
             let defaultStyle = options.defaultCellStyle || {};
             if (!defaultStyle.font) defaultStyle.font = {name: 'Calibri', sz: '12'};
             if (!defaultStyle.font.name) defaultStyle.font.name = 'Calibri';
-            if (!defaultStyle.font.sz) defaultStyle.font.sz = 11;
+            if (!defaultStyle.font.sz) defaultStyle.font.sz = 12;
             if (!defaultStyle.fill) defaultStyle.fill = {patternType: "none", fgColor: {}};
             if (!defaultStyle.border) defaultStyle.border = {};
             if (!defaultStyle.numFmt) defaultStyle.numFmt = 0;
@@ -279,10 +286,11 @@ var StyleBuilder = function (options) {
             }
             if (attributes.color) {
                 if (attributes.color.theme) {
-                    $font.append(XmlNode('color').attr('theme', attributes.color.theme));
+					let $color = XmlNode('color').attr('theme', attributes.color.theme);
                     if (attributes.color.tint) { //tint only if theme
-                        $font.append(XmlNode('tint').attr('theme', attributes.color.tint))
+                        $color.attr('tint', attributes.color.tint)
                     }
+					$font.append($color)
                 } else if (attributes.color.rgb) { // not both rgb and theme
                     $font.append(XmlNode('color').attr('rgb', attributes.color.rgb))
                 }
