@@ -89,7 +89,7 @@ if(typeof ArrayBuffer !== 'undefined' && !ArrayBuffer.prototype.slice) ArrayBuff
   if(start > end) return new Uint8Array(0);
   var out = new ArrayBuffer(end - start);
   var view = new Uint8Array(out);
-  var data = new Uint8Array(this, start, end - start)
+  var data = new Uint8Array(this, start, end - start);
   /* IE10 should have Uint8Array#set */
   if(view.set) view.set(data); else while(start <= --end) view[end - start] = data[end];
   return out;
@@ -6030,7 +6030,7 @@ module.exports = function inflate_fast(strm, start) {
           }
           else if ((op & 64) === 0) {          /* 2nd level distance code */
             here = dcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
-            continue dodist;
+            continue;
           }
           else {
             strm.msg = 'invalid distance code';
@@ -6043,7 +6043,7 @@ module.exports = function inflate_fast(strm, start) {
       }
       else if ((op & 64) === 0) {              /* 2nd level length code */
         here = lcode[(here & 0xffff)/*here.val*/ + (hold & ((1 << op) - 1))];
-        continue dolen;
+        continue;
       }
       else if (op & 32) {                     /* end-of-block */
         //Tracevv((stderr, "inflate:         end of block\n"));
@@ -6073,7 +6073,7 @@ module.exports = function inflate_fast(strm, start) {
   strm.avail_out = (_out < end ? 257 + (end - _out) : 257 - (_out - end));
   state.hold = hold;
   state.bits = bits;
-  return;
+
 };
 
 },{}],35:[function(_dereq_,module,exports){
@@ -18543,7 +18543,7 @@ function write_TABLESTYLES_bin(ba) {
 }
 
 function write_COLORPALETTE_bin() {
-  return;
+
   /* BrtBeginColorPalette [INDEXEDCOLORS] [MRUCOLORS] BrtEndColorPalette */
 }
 
@@ -19383,7 +19383,7 @@ function fuzzyfmla(f) {
 function _xlfn(f) {
   return f.replace(/_xlfn\./g,"");
 }
-function parseread1(blob) { blob.l+=1; return; }
+function parseread1(blob) { blob.l+=1;  }
 
 /* [MS-XLS] 2.5.51 */
 function parse_ColRelU(blob, length) {
@@ -19628,7 +19628,7 @@ function parsetab(blob) {
 
 /* [MS-XLS] 2.5.198.41 ; [MS-XLSB] 2.5.97.33 */
 function parse_PtgAttrSum(blob, length, opts) {
-  blob.l += opts && opts.biff == 2 ? 3 : 4; return;
+  blob.l += opts && opts.biff == 2 ? 3 : 4;
 }
 
 /* [MS-XLS] 2.5.198.58 ; [MS-XLSB] 2.5.97.40 */
@@ -30170,22 +30170,22 @@ var XmlNode = (function() {
 
   XmlNode.prototype.createElement = function() {
     return new XmlNode(arguments)
-  }
+  };
 
   XmlNode.prototype.children = function() {
     return this._children;
-  }
+  };
 
   XmlNode.prototype.append = function(node) {
     this._children.push(node);
     return this;
-  }
+  };
 
   XmlNode.prototype.prefix = function(prefix) {
     if (arguments.length == 0) { return this._prefix; }
     this._prefix = prefix;
     return this;
-  }
+  };
 
   XmlNode.prototype.attr = function(attr, value) {
     if (value == undefined) {
@@ -30205,18 +30205,18 @@ var XmlNode = (function() {
       this._attributes[attr] = value;
     }
     return this;
-  }
+  };
 
   var APOS = "'";
-  QUOTE = '"'
-  var ESCAPED_QUOTE = {}
-  ESCAPED_QUOTE[QUOTE] = '&quot;'
-  ESCAPED_QUOTE[APOS] = '&apos;'
+  QUOTE = '"';
+  var ESCAPED_QUOTE = {};
+  ESCAPED_QUOTE[QUOTE] = '&quot;';
+  ESCAPED_QUOTE[APOS] = '&apos;';
 
   XmlNode.prototype.escapeAttributeValue = function(att_value) {
     return '"' + att_value.replace(/\"/g, '&quot;') + '"'; // TODO Extend with four other codes
 
-  }
+  };
 
   XmlNode.prototype.toXml = function(node) {
     if (!node) node = this;
@@ -30237,7 +30237,7 @@ var XmlNode = (function() {
       xml += '/>';
     }
     return xml;
-  }
+  };
   return XmlNode;
 })();
 
@@ -30315,7 +30315,7 @@ var StyleBuilder = function(options) {
       this.$tableStyles = XmlNode('tableStyles')
         .attr('count', '0')
         .attr('defaultTableStyle', 'TableStyleMedium9')
-        .attr('defaultPivotStyle', 'PivotStyleMedium4')
+        .attr('defaultPivotStyle', 'PivotStyleMedium4');
 
 
       this.$styles = XmlNode('styleSheet')
@@ -30349,7 +30349,7 @@ var StyleBuilder = function(options) {
       this.defaultStyle = defaultStyle;
 
       var gray125Style = JSON.parse(JSON.stringify(defaultStyle));
-      gray125Style.fill = { patternType: "gray125", fgColor: {} }
+      gray125Style.fill = { patternType: "gray125", fgColor: {} };
 
       this.addStyles([defaultStyle, gray125Style]);
       return this;
@@ -30450,7 +30450,7 @@ var StyleBuilder = function(options) {
 
       var $font = XmlNode('font')
         .append(XmlNode('sz').attr('val', attributes.sz || this.defaultStyle.font.sz))
-        .append(XmlNode('name').attr('val', attributes.name || this.defaultStyle.font.name))
+        .append(XmlNode('name').attr('val', attributes.name || this.defaultStyle.font.name));
 
       if (attributes.bold) $font.append(XmlNode('b'));
       if (attributes.underline) $font.append(XmlNode('u'));
@@ -30466,7 +30466,7 @@ var StyleBuilder = function(options) {
 
       if (attributes.color) {
         if (attributes.color.theme) {
-          $font.append(XmlNode('color').attr('theme', attributes.color.theme))
+          $font.append(XmlNode('color').attr('theme', attributes.color.theme));
 
           if (attributes.color.tint) { //tint only if theme
             $font.append(XmlNode('tint').attr('theme', attributes.color.tint))
@@ -30609,7 +30609,7 @@ var StyleBuilder = function(options) {
       return this.$styles.toXml();
     }
   }.initialize(options || {});
-}
+};
 // 单元格样式修改功能 End --------------------------------------------------------------------------------------------
 
 XLSX.parse_xlscfb = parse_xlscfb;
