@@ -8406,13 +8406,13 @@ utils.sheet_set_array_formula = function(ws, range, formula) {
 };
 
 utils.sheet_set_ranged_cells = function(ws, range, operations) {
-	let rng = (typeof range != "string" ? range : safe_decode_range(range)).freeze();
+	let rng = (typeof range != "string" ? range : safe_decode_range(range));
 	let rngstr = typeof range == "string" ? range : encode_range(range);
 	for(let R = rng.s.r; R <= rng.e.r; ++R) for(let C = rng.s.c; C <= rng.e.c; ++C) {
 		let cell = ws_get_cell_stub(ws, R, C);
-		try{
-			operations(R, C, cell, rng, rngstr);
-		}catch(e){
+		if (cell) try {
+			operations(R, C, cell, rngstr);
+		} catch(e) {
 			console.error("error when operating cell: " + (e.message || e));
 		}
 	}
